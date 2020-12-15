@@ -1,3 +1,8 @@
+/* Author: Ollie Rees (or1g18)
+ * Project: COMP3215 Coursework
+ * File: Task.h is the interface for the constructor and destructor for the task structure, which represents an executable task.
+ */
+
 #include <stdlib.h>
 #include <stdint.h>
 
