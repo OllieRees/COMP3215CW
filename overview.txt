@@ -1,8 +1,7 @@
 Files:
     InputParser : Parses the input to produce a list of tasks
     Task : Contains the structure of tasks and functions to a constructor and descructor for the task
-    ISR: Contains methods to interface between the scheduler and task priority queue
-    InterruptQueue: A Queue structure for interrupted tasks - Is this necessary
+    ISR: Contains methods to interface between the scheduler and interrupt-task priority queue
     SchedulingAlgorithms: The standard algorithms for scheduling - RMS and EDF.
     TaskPriorityQueue: The Priotity Queue (min heap) for the tasks - static for RMS and dynamic for EDF
     Scheduler: Methods for running through the super time period, and a schedule structure that holds information about the scheduler
