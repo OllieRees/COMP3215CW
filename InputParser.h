@@ -5,6 +5,9 @@
 
 #include "Task.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
 
 /* DESCR: Parses the line detailing how many tasks there are to parse
  * PARAM: taskCountLine is the line with the number of tasks to be parsed 
@@ -19,3 +22,9 @@ int parseTaskCountLine(char * taskCountLine);
  * RETURN: a new task based on the information given in the line 
  */ 
 Task * parseTaskLine(char * taskLine);
+
+/* DESCR: Parses the input file.
+ * PARAM: fileLoc the location of the file on the computer
+ * RETURN: A list of the tasks that have been parsed
+ */ 
+Task ** parseInputFile(char * fileLoc);
