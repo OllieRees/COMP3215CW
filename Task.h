@@ -30,5 +30,3 @@ Task * createTask(char * name, uint8_t exec_time, uint8_t period);
  * RETURN: 1 if the task was successfully freed; 0 if the task can't be freed, due to the task depending on another structure. 
  */
 int destroyTask(Task * task);
-
-
