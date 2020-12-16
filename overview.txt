@@ -1,7 +1,39 @@
 Files:
     InputParser : Parses the input to produce a list of tasks
+    OutputParser: Takes the results of the scheduler and writes it to an output file.
     Task : Contains the structure of tasks and functions to a constructor and descructor for the task
-    ISR: Contains methods to interface between the scheduler and interrupt-task priority queue
     SchedulingAlgorithms: The standard algorithms for scheduling - RMS and EDF.
     TaskPriorityQueue: The Priotity Queue (min heap) for the tasks - static for RMS and dynamic for EDF
+    WaitingQueue: A hashmap of [deadline][tasks] for tasks that have been interrupted or completed
     Scheduler: Methods for running through the super time period, and a schedule structure that holds information about the scheduler
+
+Plan:
+    Parse input file into list of tasks
+    Create a priority queue with a priority assignment algorithm and all the tasks in the queue.
+    Create scheduler with the list of those tasks, a priority queue and two waiting queues, and the scheduling algorithm
+    Set current task to first task in the available prioroity queue
+    For t in super period:
+        run current task
+        if the active task executes successfully:
+            parse a success to the output file
+            push the finished task onto the waiting queue
+            pop the root from the priority queue and set it to current task.
+            parse an execute to the output file. 
+        if the available priority queue has a higher priority than the active task:
+            block the active task and save its progress
+            push the active task onto the priority queue
+            push the active task onto the interrupt queue.
+            pop the highest priority task off the priority queues and set it to current task .
+            parse an execute to the output file. 
+        if the active task runs into its next period:
+            parse a miss to the output file
+            push the active task onto the priotity queue.
+            pop the highest priority task from the available priority queue and set it to current task.
+            parse an execute to the output file. 
+        if the interupt queue has an index which is equal to the current time:
+            pop each task from that index
+            parse a miss to the output file for each task
+            reset each tasks progress and start_time to 0 in the availability priority queue
+        if the waiting queue has an index which is equal to the current time:
+            pop each task from that index in the waiting queue and push them onto the available priority queue.
+        incremenet current task's progress by 1

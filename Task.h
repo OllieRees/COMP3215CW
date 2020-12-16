@@ -9,12 +9,14 @@
 /* Task represents an executable task that a schedule has to schedule for execution
  * A Task's name is it's readable indentifier
  * A Task's execution time is the time (in 10 ms) it takes to execute the task
- * A Task's period is the slot in 10 ms that the task can run in before it needs to repeat. 
+ * A Task's period is the slot in 10 ms that the task can run in before it needs to repeat.
+ * A Task's progress is how long it has run for
  */ 
 typedef struct Task {
     char * name;
     uint8_t exec_time;
     uint8_t period;
+    uint8_t progress; 
 } Task;
 
 /* DESCR: Creates a new task with a name, execution time and period 
@@ -27,6 +29,5 @@ Task * createTask(char * name, uint8_t exec_time, uint8_t period);
 
 /* DESCR: Frees a task from memory
  * PARAM: task is the task to be freed from memory
- * RETURN: 1 if the task was successfully freed; 0 if the task can't be freed, due to the task depending on another structure. 
  */
-int destroyTask(Task * task);
+void destroyTask(Task * task);
