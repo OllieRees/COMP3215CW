@@ -1,20 +1,20 @@
+/* Author: Ollie Rees (or1g18)
+ * Project: COMP3215 Coursework
+ * File: Task.c is the implementation of the task structure's behaviour
+ * TODO: More on the file
+ */ 
 #include "Task.h"
-#include <stdint.h>
 
-Task * createTask(char * name, uint8_t exec_time, uint8_t period) {
-    Task * newTask = malloc(sizeof(Task));
-    newTask -> name = name;
-    newTask -> exec_time = exec_time;
-    newTask -> period = period;
-    return newTask;
+Task * createTask(char * name, uint8_t exect_time, uint8_t period) {
+    Task * task = malloc(sizeof(Task));
+    task -> name = name;
+    task -> exec_time = exect_time;
+    task -> period = period;
+    task -> progress = 0;
+    return task;
 }
 
-int destroyTask(Task * task) {
-    //check if task is in use somewhere -> check scheduler?
-    //TODO: Implement check if it can be freed
-    
-    //free task
+void destroyTask(Task * task) {
     free(task -> name);
     free(task);
-    return 1;
 }
