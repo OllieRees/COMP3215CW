@@ -10,7 +10,7 @@ Files:
 Plan:
     Parse input file into list of tasks
     Create a priority queue with a priority assignment algorithm and all the tasks in the queue.
-    Create scheduler with the list of those tasks, a priority queue and two waiting queues, and the scheduling algorithm
+    Create scheduler with the list of those tasks, a priority queue and one waiting queues, and the scheduling algorithm
     Set current task to first task in the available prioroity queue
     For t in super period:
         run current task

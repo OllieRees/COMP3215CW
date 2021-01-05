@@ -10,13 +10,13 @@
  * A Task's name is it's readable indentifier
  * A Task's execution time is the time (in 10 ms) it takes to execute the task
  * A Task's period is the slot in 10 ms that the task can run in before it needs to repeat.
- * A Task's progress is how long it has run for
+ * A Task's progress is how long it has run for in 10 ms
  */ 
 typedef struct Task {
     char * name;
     uint8_t exec_time;
     uint8_t period;
-    uint8_t progress; 
+    uint8_t progress;
 } Task;
 
 /* DESCR: Creates a new task with a name, execution time and period 
@@ -25,7 +25,14 @@ typedef struct Task {
  * PARAM: period is the period of the new task
  * RETURN: a pointer to the newly created task
  */
-Task * createTask(char * name, uint8_t exec_time, uint8_t period);
+Task * createTask(char * name, uint8_t exec_time, uint8_t period); 
+
+/* DESCR: Updates progress after being interrupted
+ * PARAM: task is the task which is having its progress updated
+ * PARAM: startTime is the time (in 10 ms) when the task started after being popped from the priority queue
+ * PARAM: currentTime is the current time of the scheduler
+ */
+void updateProgress(Task * task, int startTime, int currentTime);
 
 /* DESCR: Frees a task from memory
  * PARAM: task is the task to be freed from memory

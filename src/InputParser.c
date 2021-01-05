@@ -52,5 +52,7 @@ Task ** parseInputFile(char * fileLoc) {
         //parse and task to a list
         taskList[taskCount - 1] = parseTaskLine(lineBuf);
     }
+
+    fclose(fp);
     return taskList;
 }

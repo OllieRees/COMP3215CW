@@ -14,6 +14,10 @@ Task * createTask(char * name, uint8_t exect_time, uint8_t period) {
     return task;
 }
 
+void updateProgress(Task * task, int startTime, int currentTime) {
+    task -> progress = currentTime - startTime;
+}
+
 void destroyTask(Task * task) {
     free(task -> name);
     free(task);
