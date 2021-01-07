@@ -44,7 +44,7 @@ void runScheduler(int supertime, char * fileLoc, Scheduler * schedule){
             uint8_t i;
             for(i = 0; i < taskCount; i++) {
                 //if progress isn't exectime parse miss message 
-                if(tasks[i] -> progress == tasks[i] -> exec_time)
+                if(tasks[i] -> progress != tasks[i] -> exec_time)
                     parseMiss(tasks[i], t, outputFile);
                 //reset progress to 0
                 tasks[i] -> progress = 0;
