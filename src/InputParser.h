@@ -3,7 +3,10 @@
  * File: InputParser.h is the interface for reading the input file and creating Tasks from that information. 
  */ 
 
+#ifndef TASK_H
+#define TASK_H
 #include "Task.h"
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,6 +28,7 @@ Task * parseTaskLine(char * taskLine);
 
 /* DESCR: Parses the input file.
  * PARAM: fileLoc the location of the file on the computer
+ * PARAM: taskCountPtr is the buffer for holding the task count
  * RETURN: A list of the tasks that have been parsed
  */ 
-Task ** parseInputFile(char * fileLoc);
+Task ** parseInputFile(char * fileLoc, int * taskCountPtr);

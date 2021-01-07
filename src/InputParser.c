@@ -16,7 +16,7 @@ Task * parseTaskLine(char * taskLine) {
     return createTask(name, exec_time, period);
 }
 
-Task ** parseInputFile(char * fileLoc) {
+Task ** parseInputFile(char * fileLoc, int * taskCountPtr) {
     //Read File
     FILE * fp = fopen(fileLoc, "r"); 
     
@@ -36,13 +36,14 @@ Task ** parseInputFile(char * fileLoc) {
     }
 
     //parse task count 
-    int taskCount = parseTaskCountLine(lineBuf);
+    *(taskCountPtr) = parseTaskCountLine(lineBuf);
 
     //allocate space for taskCount amount of tasks
-    Task ** taskList = malloc(sizeof(Task) * taskCount);
+    Task ** taskList = malloc(sizeof(Task) * *taskCountPtr);
 
     //loop through the task lines
-    for(; taskCount > 0; taskCount--) {
+    uint8_t i;
+    for(i = 0; i < *taskCountPtr ; i--) {
         //Check line is readable
         if(fgets(lineBuf, MAXCHAR, fp) == NULL) {
             printf("Can't read task line\n");
@@ -50,7 +51,7 @@ Task ** parseInputFile(char * fileLoc) {
         }
         
         //parse and task to a list
-        taskList[taskCount - 1] = parseTaskLine(lineBuf);
+        taskList[i] = parseTaskLine(lineBuf);
     }
 
     fclose(fp);
