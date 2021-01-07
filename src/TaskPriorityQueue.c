@@ -43,9 +43,9 @@ void quicksort(Task ** tasks, uint8_t taskCount, SchedulingAlgorithm priorityAlg
   quicksort(tasks + i, taskCount - i, priorityAlg, time);
 }
 
-TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount) {
+TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount, uint8_t maxTasks) {
     TaskPriorityQueue * tpq = malloc(sizeof(TaskPriorityQueue));
-    tpq -> tasks = malloc(sizeof(Task) * taskCount);
+    tpq -> tasks = malloc(sizeof(Task) * maxTasks);
     tpq -> tasks = tasks;
     tpq -> taskCount = taskCount;
     heapify(tpq, assignPriority_RMS, 0);
@@ -53,8 +53,13 @@ TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount) {
 }
 
 int8_t insertTPQ(Task * task, TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time) {
+    if(task == NULL || tpq == NULL) {
+        printf("Couldn't find task or priority queue\n");
+        return -1;
+    }
+    
     //insert element to the end of the priority queue 
-    uint8_t i = tpq -> taskCount - 1;
+    uint8_t i = tpq -> taskCount;
     tpq -> tasks[i] = task;
     tpq -> taskCount++;
     heapify(tpq, priorityAlg, time);
@@ -62,6 +67,11 @@ int8_t insertTPQ(Task * task, TaskPriorityQueue * tpq, SchedulingAlgorithm prior
 }
 
 int8_t removeTPQ(char * name,  TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time) {
+    if(tpq == NULL) {
+        printf("Couldn't find priority queue\n");
+        return -1;
+    }
+
     //get index of the node to be removed
     int removedNodeIndex = searchIndexTPQ(name, tpq);
     
@@ -84,6 +94,11 @@ int8_t removeTPQ(char * name,  TaskPriorityQueue * tpq, SchedulingAlgorithm prio
 
 
 Task * popAndAddTPQ(Task * task, TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time) {
+    if(task == NULL || tpq == NULL){
+        printf("Couldn't find task or priority queue\n");
+        return NULL;
+    }
+
     Task * highestPTask = tpq -> tasks[0];
     
     //put last node at root and new task in the last spot

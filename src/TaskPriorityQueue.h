@@ -10,6 +10,7 @@
 #include "RMS.h"
 #include <string.h>
 #include <stdint.h>
+#include <stdio.h>
 
 /* DESCR: Task Priority Queue is a list of Task Priority Queue Elements 
  * PARAM: tasks is the list of tasks that make up the arrayified priority queue
@@ -26,9 +27,10 @@ typedef uint8_t (SchedulingAlgorithm)(Task *, int);
 /* DESCR: Creates a new task priority queue from a list of tasks
  * PARAM: tasks are the list of tasks that fill the priority queue
  * PARAM: taskCount is the number of tasks in the list, tasks.
+ * PARAM: maxTasks is the maximum number of tasks the tpq can hold
  * RETURN: the task priority queue that is built from tasks
  */ 
-TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount);
+TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount, uint8_t maxTasks);
 
 /* DESCR: Insert a new task into the priority queue 
  * PARAM: task is the new task
