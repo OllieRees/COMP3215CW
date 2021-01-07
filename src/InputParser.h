@@ -17,7 +17,7 @@
  * STR_FORMAT: NumTasks [taskCount]
  * RETURN: the number of tasks that need to be parsed
  */ 
-int parseTaskCountLine(char * taskCountLine);
+uint8_t parseTaskCountLine(char * taskCountLine);
 
 /* DESCR: Parses the line giving information about a task
  * PARAM: taskLine is is the line with the information about a task 
@@ -31,4 +31,4 @@ Task * parseTaskLine(char * taskLine);
  * PARAM: taskCountPtr is the buffer for holding the task count
  * RETURN: A list of the tasks that have been parsed
  */ 
-Task ** parseInputFile(char * fileLoc, int * taskCountPtr);
+Task ** parseInputFile(char * fileLoc, uint8_t * taskCountPtr);

@@ -3,7 +3,7 @@
 
 #define MAXCHAR 256
 
-int parseTaskCountLine(char * taskCountLine) {
+uint8_t parseTaskCountLine(char * taskCountLine) {
     taskCountLine += 7; //Skip NumTask word
     for(; *taskCountLine == ' ' || *taskCountLine == '\t'; taskCountLine++); //Skip spaces
     return atoi(taskCountLine);
@@ -16,7 +16,7 @@ Task * parseTaskLine(char * taskLine) {
     return createTask(name, exec_time, period);
 }
 
-Task ** parseInputFile(char * fileLoc, int * taskCountPtr) {
+Task ** parseInputFile(char * fileLoc, uint8_t * taskCountPtr) {
     //Read File
     FILE * fp = fopen(fileLoc, "r"); 
     
