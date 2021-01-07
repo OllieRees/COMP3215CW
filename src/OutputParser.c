@@ -1,6 +1,6 @@
 #include "OutputParser.h"
 
-FILE * createOuputFile(char * fileLoc) {
+FILE * createOutputFile(char * fileLoc) {
     FILE * file = fopen(fileLoc, "w");
     //what if file can't be opened?
     return file;

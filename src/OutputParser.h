@@ -15,7 +15,7 @@
  * PARAM: location and name of the output file
  * RETURN: The file pointer with the mode set to write
  */
-FILE * createOuputFile(char * fileLoc);
+FILE * createOutputFile(char * fileLoc);
 
 /* DESCR: Parses a message to an output file detailing that a task has begun execution 
  * PARAM: task is the task that has been successfully executed

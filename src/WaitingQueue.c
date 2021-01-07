@@ -4,7 +4,6 @@
  */ 
 
 #include "WaitingQueue.h"
-#include <uthash.h>
 
 WaitingQueue * createWaitingQueue(uint8_t tableSize) {
     //If tableSize is a power of 2, add 1 more to tableSize
@@ -39,9 +38,9 @@ uint8_t encodeKey(int deadline, uint8_t tableSize) {
 
 uint8_t getKey(int deadline, WaitingQueue * wq) {
     uint8_t key = encodeKey(deadline, wq -> queueSize);
-    //probing -> loop around from key to key - 1.
+    //linear probing - find first element that is null or part of the deadline
     uint8_t i;
-    for(i = key; i == key - 1 || wq -> elements[key] -> deadline != deadline || wq -> elements[key] -> taskCount != 0; key++); 
+    for(i = key; i == key - 1 || wq -> elements[key] -> deadline != deadline || wq -> elements[key] -> taskCount != 0; i = i + 1 % wq->queueSize); 
     return key;
 }
 
@@ -80,12 +79,13 @@ Task * popWQ(Task * task, int deadline, WaitingQueue * wq) {
     //find the right task
     uint8_t i;
     for(i = 0; i < wq -> elements[key] -> taskCount; i++) {
-        if(wq -> elements[key] -> tasks[i] == task) {
+        if(tasks[i] == task) {
             //remove task and return it
-            wq -> elements[key] -> tasks[i] = NULL;
-            return task;
+            tasks[i] = NULL;
+            return tasks[i];
         }
     }
+
     //couldn't be found
     return NULL;
 }

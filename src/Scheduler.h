@@ -27,7 +27,7 @@ typedef struct Scheduler {
  * PARAM: tasks are the list of the tasks the scheduler has; can be NULL.
  * RETURN: a pointer to the newly created scheduler
  */ 
-Scheduler * createScheduler(Task ** tasks, uint8_t taskCount);
+Scheduler * createScheduler(Task ** tasks, const uint8_t taskCount);
 
 /* DESCR: Finds a task in the scheduler
  * PARAM: name is the name of the task to be found

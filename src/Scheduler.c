@@ -18,7 +18,7 @@ Scheduler * createScheduler(Task ** tasks, uint8_t taskCount) {
 Task * findTask(char * name, Scheduler * schedule) {
     uint8_t i;
     for(i = 0; i < schedule -> taskCount; i++) {
-        if(strcmp(schedule -> tasks[i] -> name, name)) 
+        if(strcmp(schedule -> tasks[i] -> name, name) == 0) 
             return schedule -> tasks[i];
     }
     return NULL;
@@ -39,9 +39,10 @@ void runScheduler(int supertime, char * fileLoc, Scheduler * schedule){
         //miss
         if(peekWQ(t, schedule -> waitingQueue) != NULL) {
             //for each task
+            int taskCount = schedule -> waitingQueue -> elements[getKey(t, schedule -> waitingQueue)] -> taskCount;
             Task ** tasks = popAllWQ(t, schedule -> waitingQueue);
             uint8_t i;
-            for(i = 0; tasks[i] != NULL; i++) {
+            for(i = 0; i < taskCount; i++) {
                 //if progress isn't exectime parse miss message 
                 if(tasks[i] -> progress == tasks[i] -> exec_time)
                     parseMiss(tasks[i], t, outputFile);
