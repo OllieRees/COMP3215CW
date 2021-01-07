@@ -24,9 +24,9 @@ Task * findTask(char * name, Scheduler * schedule) {
     return NULL;
 }
 
-void runScheduler(int supertime, Scheduler * schedule){
+void runScheduler(int supertime, char * fileLoc, Scheduler * schedule){
     //set up output file
-    FILE * outputFile = createOutputFile("./output.txt");  
+    FILE * outputFile = createOutputFile(fileLoc);  
 
     //set up current task
     Task * currTask = getHighestPriorityTask(schedule -> taskPriorityQueue, assignPriority_RMS, 0); 
@@ -76,6 +76,7 @@ void runScheduler(int supertime, Scheduler * schedule){
             startTime = t;
         }
     }
+    closeOutputFile(outputFile);
 }   
 
 int8_t freeScheduler(Scheduler * schedule){
