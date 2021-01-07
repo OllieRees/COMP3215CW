@@ -6,5 +6,8 @@
  * RETURN: the priority of the task
  */
 uint8_t assignPriority_EDF(Task * task, int time) {
-    return time - (time % task -> period);
+    
+    //get next deadline 
+    int deadline = time + (time % task -> period);
+    return deadline - time;
 }
