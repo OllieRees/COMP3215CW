@@ -8,7 +8,7 @@ Scheduler * createScheduler(Task ** tasks, uint8_t taskCount) {
     Scheduler * schedule = malloc(sizeof(Scheduler));
     schedule -> tasks = tasks;
     schedule -> taskCount = taskCount;
-    schedule -> taskPriorityQueue = createTaskPriorityQueue(tasks, taskCount, assignPriority_RMS);
+    schedule -> taskPriorityQueue = createTaskPriorityQueue(tasks, taskCount);
     schedule -> waitingQueue = createFilledWaitingQueue(tasks, taskCount); 
     
     //add all tasks to waiting queue
