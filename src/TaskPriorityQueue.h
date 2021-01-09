@@ -71,7 +71,7 @@ Task * searchTaskTPQ(char * name, TaskPriorityQueue * tpq);
  * PARAM: tpq is the the priority queue being searched 
  * RETURN: the index of the task or -1 if the task couldn't be found in the priority queue
  */ 
-uint8_t searchIndexTPQ(char * name, TaskPriorityQueue * tpq);
+int16_t searchIndexTPQ(char * name, TaskPriorityQueue * tpq);
 
 /* DESCR: Gets the task with the highest priority, and removes it from the priority queue.
  * PARAM: tpq is the priority queue which is being searced for the highest priority task.

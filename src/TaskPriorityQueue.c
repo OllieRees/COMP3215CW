@@ -44,8 +44,8 @@ void quicksort(Task ** tasks, uint8_t taskCount, SchedulingAlgorithm priorityAlg
 }
 
 TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount, uint8_t maxTasks) {
-    TaskPriorityQueue * tpq = malloc(sizeof(TaskPriorityQueue));
-    tpq -> tasks = malloc(sizeof(Task) * maxTasks);
+    TaskPriorityQueue * tpq = (TaskPriorityQueue *) malloc(sizeof(TaskPriorityQueue));
+    tpq -> tasks = (Task **) malloc(sizeof(Task) * maxTasks);
     tpq -> tasks = tasks;
     tpq -> taskCount = taskCount;
     heapify(tpq, assignPriority_RMS, 0);
@@ -120,7 +120,7 @@ Task * searchElementTPQ(char * name, TaskPriorityQueue * tpq) {
     return NULL;
 }
 
-uint8_t searchIndexTPQ(char * name, TaskPriorityQueue * tpq) {
+int16_t searchIndexTPQ(char * name, TaskPriorityQueue * tpq) {
     for(int i = 0; i < tpq -> taskCount; i++) {
         if(strcmp(tpq -> tasks[i] -> name, name) == 0)
             return i;
