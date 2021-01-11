@@ -10,26 +10,24 @@
 WaitingQueue * createWaitingQueue(uint8_t tableSize) {
     WaitingQueue * wq = (WaitingQueue *) malloc(sizeof(WaitingQueue));
     wq -> queueSize = tableSize;
-    wq -> elements = (WaitingQueueElement **) malloc(sizeof(WaitingQueueElement *) * tableSize);
+    wq -> elements = (WaitingQueueElement *) malloc(sizeof(WaitingQueueElement) * tableSize);
     
     //set elements
     uint8_t i;
     for(i = 0; i < tableSize; i++) {
-        wq -> elements[i] = (WaitingQueueElement *) malloc(sizeof(WaitingQueueElement));
-        wq -> elements[i] -> deadline = 0;
-        wq -> elements[i] -> taskCount = 0;
-        wq -> elements[i] -> tasks = NULL;
+        wq -> elements[i].deadline = 0;
+        wq -> elements[i].taskCount = 0;
+        wq -> elements[i].tasks = NULL;
     }
     return wq;
 }
 
-WaitingQueue * createFilledWaitingQueue(Task ** tasks, uint8_t tableSize) {
-    WaitingQueue * wq = (WaitingQueue *) malloc(sizeof(WaitingQueue));
-    wq -> queueSize = tableSize;
-    wq -> elements = (WaitingQueueElement **) malloc(sizeof(WaitingQueueElement *) * tableSize);
+WaitingQueue * createFilledWaitingQueue(Task ** tasks, uint8_t taskCount, uint8_t tableSize) {
+    WaitingQueue * wq = createWaitingQueue(tableSize);
+    
     //add elements
     uint8_t i;
-    for(i = 0; i < tableSize; i++) {
+    for(i = 0; i < taskCount; i++) {
         pushWQ(tasks[i], tasks[i] -> period, wq);
     }
     return wq;
@@ -40,22 +38,16 @@ uint8_t getKey(int deadline, WaitingQueue * wq) {
     double const A = 0.61803398875; 
     uint8_t key = floor(wq->queueSize * (deadline * A - floor(deadline * A)));
     
-    //linear probing - find first element that is null or part of the deadline
-    //all fine until key = 0, stop when key = wq -> queueSize - 1
-    uint8_t i;
-    uint8_t lastI = key > 0 ? key - 1 : wq -> queueSize - 1;
-    for(i = key; i != lastI; i = (i + 1) % wq->queueSize) {
-        if(wq -> elements[key] -> deadline == deadline || wq -> elements[key] -> taskCount == 0)
-            break;
+    //linear probing 
+    uint8_t i, k;
+    for(k = key, i = 0; i < wq -> queueSize; k = (k + 1) % wq->queueSize, i++) {
+        if(wq -> elements[k].taskCount == 0)
+            return k;
     }
     
     //couldn't find empty spot
-    if(i == lastI) {
-        printf("Error: Hash Table is full\n");
-        return wq -> queueSize + 1;
-    }
-
-    return i;
+    //printf("Error: Hash Table is full\n");
+    return wq -> queueSize + 1;
 }
 
 uint8_t findKey(int deadline, WaitingQueue * wq) {
@@ -63,22 +55,15 @@ uint8_t findKey(int deadline, WaitingQueue * wq) {
     double const A = 0.61803398875; 
     uint8_t key = floor(wq->queueSize * (deadline * A - floor(deadline * A)));
 
-    //linear probing - find first element that is null or part of the deadline
-    //all fine until key = 0, stop when key = wq -> queueSize - 1
-    uint8_t i;
-    uint8_t lastI = key > 0 ? key - 1 : wq -> queueSize - 1;
-    for(i = key; i != lastI; i = (i + 1) % wq->queueSize) {
-        if(wq -> elements[key] -> deadline == deadline)
-            break;
+    //linear probing
+    uint8_t i, k;
+    for(k = key, i = 0; i < wq -> queueSize; k = (k + 1) % wq->queueSize, i++) {
+        if(wq -> elements[k].deadline == deadline)
+            return k;
     }
 
     //couldn't find empty spot
-    if(i == lastI) {
-        printf("Error: Element with %d doesn't exist in table\n", deadline);
-        return wq -> queueSize + 1;
-    }
-
-    return i;
+    return wq -> queueSize + 1;
 }
 
 int8_t pushWQ(Task * task, int deadline, WaitingQueue * wq) {
@@ -88,26 +73,27 @@ int8_t pushWQ(Task * task, int deadline, WaitingQueue * wq) {
         if(key == wq -> queueSize + 1) //doesn't have an empty spot 
             return 0;
     } else {
+        printf("Checking task %s doesn't exist in the map\n", task -> name);
         //check if task already exists in wq[key]
         uint8_t i; 
-        for(i = 0; i < wq -> elements[key] -> taskCount; i++) {
-            if(strcmp(wq -> elements[key] -> tasks[i] -> name, task -> name) == 0)
+        for(i = 0; i < wq -> elements[key].taskCount; i++) {
+            if(strcmp(wq -> elements[key].tasks[i] -> name, task -> name) == 0)
                 return 0;
         }    
     }
-    
-    WaitingQueueElement * element = wq -> elements[key];
+    printf("Push task to %d\n", key); 
+    //WaitingQueueElement element = wq -> elements[key];
     
     //if empty assign a deadline and allocate memory for task
-    if (element -> taskCount == 0) {
-        element -> deadline = deadline; 
-        element -> tasks = (Task **) malloc(sizeof(Task));
+    if (wq -> elements[key].taskCount == 0) {
+        wq -> elements[key].deadline = deadline; 
+        wq -> elements[key].tasks = (Task **) malloc(sizeof(Task *));
     }
 
-    //add task 
-    (element -> taskCount)++;
-    element -> tasks = realloc(element -> tasks, sizeof(Task) * element -> taskCount);
-    element -> tasks[element -> taskCount - 1] = task;
+    //add task to the end of the element 
+    wq -> elements[key].tasks = realloc(wq -> elements[key].tasks, sizeof(Task *) * (wq -> elements[key].taskCount + 1));
+    wq -> elements[key].tasks[wq -> elements[key].taskCount] = task;
+    wq -> elements[key].taskCount++;
     return 1;
 }
 
@@ -119,13 +105,15 @@ Task ** popAllWQ(int deadline, WaitingQueue * wq) {
     if(key == wq -> queueSize + 1) 
         return NULL;
 
+    printf("Pop tasks in %d\n", key); 
+
     //save task list
-    Task ** tasks = wq -> elements[key] -> tasks;
+    Task ** tasks = wq -> elements[key].tasks;
     
     //reset the element's params
-    wq -> elements[key] -> tasks = NULL;
-    wq -> elements[key] -> taskCount = 0;
-    wq -> elements[key] -> deadline = 0;
+    wq -> elements[key].tasks = NULL;
+    wq -> elements[key].taskCount = 0;
+    wq -> elements[key].deadline = 0;
 
     return tasks;
 }
@@ -134,15 +122,22 @@ Task ** peekWQ(int deadline, WaitingQueue * wq) {
     uint8_t key = findKey(deadline, wq);
     if(key == wq -> queueSize + 1)
         return NULL;
-    return wq -> elements[key] -> tasks;
+    return wq -> elements[key].tasks;
+}
+
+void printWaitingQueue(WaitingQueue* wq) {    
+    for(int i = 0; i < wq -> queueSize; i++) {
+        printf("{");
+        for(int j = 0; j < wq -> elements[i].taskCount; j++) {
+            printTask(wq -> elements[i].tasks[j]);
+        }
+        printf("}\n");
+    }
 }
 
 int8_t destroyWaitingQueue(WaitingQueue *wq) {
-   //free elements
-   uint8_t i;
-   for(i = 0; i < wq -> queueSize; i++) {
-        free(wq -> elements[i]);
-   }
-   free(wq);
-   return 1;
+    //free elements
+    free(wq -> elements);
+    free(wq);
+    return 1;
 }

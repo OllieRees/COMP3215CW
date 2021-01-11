@@ -34,7 +34,7 @@ typedef struct WaitingQueueElement {
  */ 
 typedef struct WaitingQueue {
     uint8_t queueSize;
-    WaitingQueueElement ** elements;
+    WaitingQueueElement * elements;
 } WaitingQueue;
 
 
@@ -46,10 +46,11 @@ WaitingQueue * createWaitingQueue(uint8_t tableSize);
 
 /* DESCR: Constructs a waiting queue with a given size
  * PARAM: tasks is the initial tasks in the waiting queue
+ * PARAM: taskCount is the number of tasks in the list.
  * PARAM: tableSize is the size of the waiting queue.
  * RETURN: a pointer to the waiting queue
  */ 
-WaitingQueue * createFilledWaitingQueue(Task ** tasks, uint8_t tableSize);
+WaitingQueue * createFilledWaitingQueue(Task ** tasks, uint8_t taskCount, uint8_t tableSize);
 
 /* DESCR: Gets the key based on the deadline of a task. Gives a key that is out of bounds of the table if the table is full.
  * PARAM: deadline is the deadline used to encode the key 
@@ -86,6 +87,11 @@ Task ** popAllWQ(int deadline, WaitingQueue * wq);
  * RETURN: the list of the tasks in wq associated with the deadline; NULL if there are no tasks in that deadline.
  */
 Task ** peekWQ(int deadline, WaitingQueue * wq); 
+
+/* DESCR: Prints the waiting queue's contents. Used for debugging.
+ * PARAM: the waiting queue being printed
+ */ 
+void printWaitingQueue(WaitingQueue* wq); 
 
 /* DESCR: Frees a waiting queue from memory
  * PARAM: The waiting queue to be freed from memory
