@@ -98,7 +98,6 @@ void heapify(TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time)
  */ 
 void printTPQ(TaskPriorityQueue * tpq);
 
-
 /* DESCR: Frees a task priority queue from memory
  * PARAM: tpq is the priority queue being freed from memory
  * RETURN: 1 if the tpq was sucessfully freed from memory, 0 otherwise.

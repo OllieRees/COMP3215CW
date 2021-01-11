@@ -58,7 +58,7 @@ uint8_t findKey(int deadline, WaitingQueue * wq) {
     //linear probing
     uint8_t i, k;
     for(k = key, i = 0; i < wq -> queueSize; k = (k + 1) % wq->queueSize, i++) {
-        if(wq -> elements[k].deadline == deadline)
+        if(wq -> elements[k].deadline == deadline) 
             return k;
     }
 
@@ -81,8 +81,7 @@ int8_t pushWQ(Task * task, int deadline, WaitingQueue * wq) {
                 return 0;
         }    
     }
-    printf("Push task to %d\n", key); 
-    //WaitingQueueElement element = wq -> elements[key];
+    printf("Push %s to %d\n", task -> name, key); 
     
     //if empty assign a deadline and allocate memory for task
     if (wq -> elements[key].taskCount == 0) {
@@ -105,7 +104,7 @@ Task ** popAllWQ(int deadline, WaitingQueue * wq) {
     if(key == wq -> queueSize + 1) 
         return NULL;
 
-    printf("Pop tasks in %d\n", key); 
+    printf("Pop tasks in wq at %d\n", key); 
 
     //save task list
     Task ** tasks = wq -> elements[key].tasks;

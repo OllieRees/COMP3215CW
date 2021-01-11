@@ -52,12 +52,24 @@ TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount) {
     return tpq;
 }
 
+Task * searchElementTPQ(char * name, TaskPriorityQueue * tpq) {
+    int16_t i = searchIndexTPQ(name, tpq);
+    if(i == -1)
+        return NULL;
+    return tpq -> tasks[i];
+}
+
 int8_t insertTPQ(Task * task, TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time) {
     if(task == NULL || tpq == NULL) {
         printf("Couldn't find task or priority queue\n");
         return -1;
     }
     
+    if(searchElementTPQ(task -> name, tpq) != NULL)
+        return -1;
+
+    printf("Insert %s into priority queue at %d\n", task -> name, time);
+
     //insert element to the end of the priority queue 
     uint8_t i = tpq -> taskCount;
     tpq -> tasks = (Task **) realloc(tpq -> tasks, sizeof(Task *) * (i + 1));
@@ -68,7 +80,7 @@ int8_t insertTPQ(Task * task, TaskPriorityQueue * tpq, SchedulingAlgorithm prior
 }
 
 int8_t removeTPQ(char * name,  TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time) {
-    if(tpq == NULL) {
+    if(tpq == NULL || tpq -> tasks == NULL) {
         printf("Couldn't find priority queue\n");
         return -1;
     }
@@ -84,6 +96,8 @@ int8_t removeTPQ(char * name,  TaskPriorityQueue * tpq, SchedulingAlgorithm prio
     if(removedNodeIndex != tpq -> taskCount - 1) {
         tpq -> tasks[removedNodeIndex] = tpq -> tasks[tpq -> taskCount - 1];
     }
+    
+    printf("Removed %s from priority queue at %d\n",  name, time);
 
     //reduce task count
     tpq -> taskCount--;
@@ -96,7 +110,8 @@ int8_t removeTPQ(char * name,  TaskPriorityQueue * tpq, SchedulingAlgorithm prio
 
 
 Task * popAndAddTPQ(Task * task, TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time) {
-    if(task == NULL || tpq == NULL){
+    //Check for null pointers
+    if(task == NULL || tpq == NULL || tpq -> tasks == NULL) {
         printf("Couldn't find task or priority queue\n");
         return NULL;
     }
@@ -104,21 +119,13 @@ Task * popAndAddTPQ(Task * task, TaskPriorityQueue * tpq, SchedulingAlgorithm pr
     Task * highestPTask = tpq -> tasks[0];
     
     //put new node where root was
-    if(tpq -> taskCount > 1) {
+    if(tpq -> taskCount > 0) {
         tpq -> tasks[0] = task;
     }
 
     heapify(tpq, priorityAlg, time);
     return highestPTask;
 
-}
-
-Task * searchElementTPQ(char * name, TaskPriorityQueue * tpq) {
-    for(int i = 0; i < tpq -> taskCount; i++) {
-        if(strcmp(tpq -> tasks[i] -> name, name) == 0)
-            return tpq -> tasks[i];
-    }
-    return NULL;
 }
 
 int16_t searchIndexTPQ(char * name, TaskPriorityQueue * tpq) {
@@ -130,12 +137,23 @@ int16_t searchIndexTPQ(char * name, TaskPriorityQueue * tpq) {
 }
 
 Task * getHighestPriorityTask(TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time) {
+    if(tpq == NULL || tpq -> tasks == NULL) {
+        printf("No task priority queue given\n");
+        return NULL;
+    }
+
     Task * highestPTask = tpq -> tasks[0];
+    printf("Pop root : %s\n", highestPTask -> name); 
     removeTPQ(highestPTask -> name, tpq, priorityAlg, time);
     return highestPTask;
 }
 
 Task * peekHighestPriorityTask(TaskPriorityQueue * tpq) {
+    if(tpq == NULL || tpq -> tasks == NULL) {
+        printf("No task priority queue given\n");
+        return NULL;
+    }
+    
     return tpq -> tasks[0];
 }
 
