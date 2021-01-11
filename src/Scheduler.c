@@ -8,7 +8,7 @@ Scheduler * createScheduler(Task ** tasks, uint8_t taskCount) {
     Scheduler * schedule = (Scheduler *) malloc(sizeof(Scheduler));
     schedule -> tasks = tasks;
     schedule -> taskCount = taskCount;
-    schedule -> taskPriorityQueue = createTaskPriorityQueue(tasks, taskCount);
+    schedule -> taskPriorityQueue = createTaskPriorityQueue(tasks, taskCount, assignPriority_RMS);
     schedule -> waitingQueue = createFilledWaitingQueue(tasks, taskCount, taskCount); 
     
     //add all tasks to waiting queue
@@ -63,7 +63,7 @@ static void runInterrupt(Task ** currTask, unsigned int time, unsigned int * sta
         currTask[0] -> progress += time - *startTime;
         //pop highest p. task and push currTask on
         *currTask = popAndAddTPQ(*currTask, schedule -> taskPriorityQueue, priorityFunc, time);
-        if(currTask != NULL) {
+        if(currTask[0] != NULL) {
             //parse execute
             taskExecuted(*currTask, time, startTime, outputFile);
         }
@@ -80,7 +80,7 @@ static void runCompletion(Task ** currTask, unsigned int time, unsigned int * st
     printTPQ(schedule -> taskPriorityQueue);
     printf("\n\n");
     *currTask = getHighestPriorityTask(schedule->taskPriorityQueue, priorityFunc, time);
-    if(currTask != NULL) {
+    if(currTask[0] != NULL) {
         //parse execute
         taskExecuted(*currTask, time, startTime, outputFile);
     }
