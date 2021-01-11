@@ -27,10 +27,9 @@ typedef uint8_t (SchedulingAlgorithm)(Task *, int);
 /* DESCR: Creates a new task priority queue from a list of tasks
  * PARAM: tasks are the list of tasks that fill the priority queue
  * PARAM: taskCount is the number of tasks in the list, tasks.
- * PARAM: maxTasks is the maximum number of tasks the tpq can hold
  * RETURN: the task priority queue that is built from tasks
  */ 
-TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount, uint8_t maxTasks);
+TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount);
 
 /* DESCR: Insert a new task into the priority queue 
  * PARAM: task is the new task
@@ -83,11 +82,9 @@ Task * getHighestPriorityTask(TaskPriorityQueue * tpq, SchedulingAlgorithm prior
 
 /* DESCR: Gets the task with the highest priority, without removing it from the priority queue.
  * PARAM: tpq is the priority queue which is being searced for the highest priority task.
- * PARAM: priorityAlg is the function used to update priorities 
- * PARAM: time is the current time when the function is called. Used by the scheduling algorithm.
  * RETURN: the task with the highest priority.
  */ 
-Task * peekHighestPriorityTask(TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time);
+Task * peekHighestPriorityTask(TaskPriorityQueue * tpq);
 
 /* DESCR: heapifys turns the binary tree into a heap structure, and updates priorities 
  * PARAM: tpq is the binary tree, but using the same element type as the task priority queue
@@ -95,6 +92,12 @@ Task * peekHighestPriorityTask(TaskPriorityQueue * tpq, SchedulingAlgorithm prio
  * PARAM: time is the current time when the function is called. Used by the scheduling algorithm.
  */ 
 void heapify(TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time); 
+
+/* DESCR: Prints the task priority queue. Used for debugging.
+ * PARAM: tpq is the task priority queue being printed.
+ */ 
+void printTPQ(TaskPriorityQueue * tpq);
+
 
 /* DESCR: Frees a task priority queue from memory
  * PARAM: tpq is the priority queue being freed from memory

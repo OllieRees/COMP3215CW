@@ -43,9 +43,9 @@ void quicksort(Task ** tasks, uint8_t taskCount, SchedulingAlgorithm priorityAlg
   quicksort(tasks + i, taskCount - i, priorityAlg, time);
 }
 
-TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount, uint8_t maxTasks) {
+TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount) {
     TaskPriorityQueue * tpq = (TaskPriorityQueue *) malloc(sizeof(TaskPriorityQueue));
-    tpq -> tasks = (Task **) malloc(sizeof(Task) * maxTasks);
+    tpq -> tasks = (Task **) malloc(sizeof(Task) * taskCount);
     tpq -> tasks = tasks;
     tpq -> taskCount = taskCount;
     heapify(tpq, assignPriority_RMS, 0);
@@ -60,6 +60,7 @@ int8_t insertTPQ(Task * task, TaskPriorityQueue * tpq, SchedulingAlgorithm prior
     
     //insert element to the end of the priority queue 
     uint8_t i = tpq -> taskCount;
+    tpq -> tasks = (Task **) realloc(tpq -> tasks, sizeof(Task *) * (i + 1));
     tpq -> tasks[i] = task;
     tpq -> taskCount++;
     heapify(tpq, priorityAlg, time);
@@ -82,12 +83,13 @@ int8_t removeTPQ(char * name,  TaskPriorityQueue * tpq, SchedulingAlgorithm prio
     //put last node in the position of the removedNode
     if(removedNodeIndex != tpq -> taskCount - 1) {
         tpq -> tasks[removedNodeIndex] = tpq -> tasks[tpq -> taskCount - 1];
-        tpq -> tasks[tpq -> taskCount - 1] = NULL;
     }
 
     //reduce task count
     tpq -> taskCount--;
-
+    
+    //reallocate task space
+    tpq -> tasks = (Task **) realloc(tpq -> tasks, sizeof(Task *) * tpq -> taskCount);
     heapify(tpq, priorityAlg, time);
     return 1;
 }
@@ -101,10 +103,9 @@ Task * popAndAddTPQ(Task * task, TaskPriorityQueue * tpq, SchedulingAlgorithm pr
 
     Task * highestPTask = tpq -> tasks[0];
     
-    //put last node at root and new task in the last spot
+    //put new node where root was
     if(tpq -> taskCount > 1) {
-        tpq -> tasks[0] = tpq -> tasks[tpq -> taskCount - 1];
-        tpq -> tasks[tpq -> taskCount - 1] = task;
+        tpq -> tasks[0] = task;
     }
 
     heapify(tpq, priorityAlg, time);
@@ -134,12 +135,18 @@ Task * getHighestPriorityTask(TaskPriorityQueue * tpq, SchedulingAlgorithm prior
     return highestPTask;
 }
 
-Task * peekHighestPriorityTask(TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time) {
+Task * peekHighestPriorityTask(TaskPriorityQueue * tpq) {
     return tpq -> tasks[0];
 }
 
 void heapify(TaskPriorityQueue * tpq, SchedulingAlgorithm priorityAlg, int time) {
     quicksort(tpq -> tasks, tpq -> taskCount, priorityAlg, time); 
+}
+
+void printTPQ(TaskPriorityQueue *tpq) {
+    uint8_t i;
+    for(i = 0; i < tpq -> taskCount; i++)
+        printTask(tpq -> tasks[i]);
 }
 
 int8_t destroyTaskPriorityQueue(TaskPriorityQueue * tpq) {

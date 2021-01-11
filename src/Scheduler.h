@@ -8,7 +8,7 @@
 #include "Task.h"
 #endif
 #include "TaskPriorityQueue.h"
-#include "WaitingQueue.h"
+#include "HashMap.h"
 #include "EDF.h"
 #include "RMS.h"
 #include "OutputParser.h"
@@ -28,13 +28,6 @@ typedef struct Scheduler {
  * RETURN: a pointer to the newly created scheduler
  */ 
 Scheduler * createScheduler(Task ** tasks, const uint8_t taskCount);
-
-/* DESCR: Finds a task in the scheduler
- * PARAM: name is the name of the task to be found
- * PARAM: schedule is the schedule being searched
- * RETURN: The task or NULL if the task doesn't exist 
- */ 
-Task * findTask(char * name, Scheduler * schedule);
 
 /* DESCR: Runs a scheduler for a time
  * PARAM: supertime is the time the scheduler is run for
