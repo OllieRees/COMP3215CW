@@ -86,10 +86,9 @@ static void runCompletion(Task ** currTask, unsigned int time, unsigned int * st
     }
 }
 
-void runScheduler(int supertime, char * fileLoc, Scheduler * schedule){
+void runScheduler(int supertime, char * fileLoc, SchedulingAlgorithm * priorityFunc, Scheduler * schedule){
     //set up output file
     FILE * outputFile = createOutputFile(fileLoc);  
-    SchedulingAlgorithm * priorityFunc = assignPriority_EDF;
     printWaitingQueue(schedule -> waitingQueue);
 
     //set up current task

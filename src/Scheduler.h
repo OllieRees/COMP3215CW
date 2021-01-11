@@ -32,9 +32,10 @@ Scheduler * createScheduler(Task ** tasks, const uint8_t taskCount);
 /* DESCR: Runs a scheduler for a time
  * PARAM: supertime is the time the scheduler is run for
  * PARAM: fileLoc is the location of the output file
+ * PARAM: priorityFunc is the priority function used to prioritise tasks during the supertime period.
  * PARAM: schedule is the scheduler being run 
  */ 
-void runScheduler(int supertime, char * fileLoc, Scheduler * schedule);
+void runScheduler(int supertime, char * fileLoc, SchedulingAlgorithm * priorityFunc, Scheduler * schedule);
 
 /* DESCR: Frees a scheduler, and its tasks and priority queue from memory 
  * PARAM: schedule is the scheduler being freed 
