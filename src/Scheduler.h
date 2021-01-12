@@ -9,8 +9,8 @@
 #endif
 #include "TaskPriorityQueue.h"
 #include "HashMap.h"
-#include "EDF.h"
 #include "RMS.h"
+#include "EDF.h"
 #include "OutputParser.h"
 #include <string.h>
 #include <stdio.h> 
@@ -25,6 +25,7 @@ typedef struct Scheduler {
 
 /* DESCER: Create a new scheduler with the given task and priorty queue.
  * PARAM: tasks are the list of the tasks the scheduler has; can be NULL.
+ * PARAM: taskCount is the number of tasks in the list of tasks.
  * RETURN: a pointer to the newly created scheduler
  */ 
 Scheduler * createScheduler(Task ** tasks, const uint8_t taskCount);

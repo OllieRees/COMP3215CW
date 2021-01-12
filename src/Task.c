@@ -6,7 +6,7 @@
 #include "Task.h"
 
 Task * createTask(char * name, uint8_t exect_time, uint8_t period) {
-    Task * task = malloc(sizeof(Task));
+    Task * task = (Task *) malloc(sizeof(Task));
     task -> name = name;
     task -> exec_time = exect_time;
     task -> period = period;
@@ -16,6 +16,10 @@ Task * createTask(char * name, uint8_t exect_time, uint8_t period) {
 
 void updateProgress(Task * task, int startTime, int currentTime) {
     task -> progress = currentTime - startTime;
+}
+
+void printTask(Task * task) {
+    printf("%s %d %d\n", task -> name, task -> exec_time, task -> period);
 }
 
 void destroyTask(Task * task) {

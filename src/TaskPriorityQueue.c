@@ -43,12 +43,12 @@ void quicksort(Task ** tasks, uint8_t taskCount, SchedulingAlgorithm priorityAlg
   quicksort(tasks + i, taskCount - i, priorityAlg, time);
 }
 
-TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount) {
+TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount, SchedulingAlgorithm priorityAlg) {
     TaskPriorityQueue * tpq = (TaskPriorityQueue *) malloc(sizeof(TaskPriorityQueue));
     tpq -> tasks = (Task **) malloc(sizeof(Task) * taskCount);
     tpq -> tasks = tasks;
     tpq -> taskCount = taskCount;
-    heapify(tpq, assignPriority_RMS, 0);
+    heapify(tpq, priorityAlg, 0);
     return tpq;
 }
 

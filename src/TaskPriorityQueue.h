@@ -7,7 +7,6 @@
 #define TASK_H
 #include "Task.h"
 #endif
-#include "RMS.h"
 #include <string.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -27,9 +26,10 @@ typedef uint8_t (SchedulingAlgorithm)(Task *, int);
 /* DESCR: Creates a new task priority queue from a list of tasks
  * PARAM: tasks are the list of tasks that fill the priority queue
  * PARAM: taskCount is the number of tasks in the list, tasks.
+ * PARAM: priorityAlg is the priority assignment algorithm used to initally heapify the priority queue.
  * RETURN: the task priority queue that is built from tasks
  */ 
-TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount);
+TaskPriorityQueue * createTaskPriorityQueue(Task ** tasks, uint8_t taskCount, SchedulingAlgorithm priorityAlg);
 
 /* DESCR: Insert a new task into the priority queue 
  * PARAM: task is the new task

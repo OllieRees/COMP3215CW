@@ -7,15 +7,15 @@ FILE * createOutputFile(char * fileLoc) {
 }
 
 void parseExecution(Task * task, int time, FILE * outputFile) {
-   fprintf(outputFile, "%d %s Executes", time, task -> name); 
+   fprintf(outputFile, "%d %s Executes\n", time, task -> name); 
 }
 
 void parseMiss(Task * task, int time, FILE * outputFile) {
-    fprintf(outputFile, "%d %s Misses", time, task -> name); 
+    fprintf(outputFile, "%d %s Misses\n", time, task -> name); 
 }
 
 void parseCompletion(Task * task, int time, FILE * outputFile) {
-   fprintf(outputFile, "%d %s Completes", time, task -> name); 
+   fprintf(outputFile, "%d %s Completes\n", time, task -> name); 
 }
 
 void closeOutputFile(FILE * file) {

@@ -9,4 +9,3 @@
  * RETURN: the priority of the task
  */
 uint8_t assignPriority_EDF(Task * task, int time);
-

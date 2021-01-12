@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 
 /* Task represents an executable task that a schedule has to schedule for execution
  * A Task's name is it's readable indentifier
@@ -33,6 +34,11 @@ Task * createTask(char * name, uint8_t exec_time, uint8_t period);
  * PARAM: currentTime is the current time of the scheduler
  */
 void updateProgress(Task * task, int startTime, int currentTime);
+
+/* DECSR: Prints the task's details. Used for debugging.
+ * PARAM: task is the task being printed.
+ */ 
+void printTask(Task * task);
 
 /* DESCR: Frees a task from memory
  * PARAM: task is the task to be freed from memory
