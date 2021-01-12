@@ -1,0 +1,59 @@
+\documentclass{article}
+
+\title{RMS and EDF Scheduler}
+\author{Ollie Rees (or1g18)}
+
+\begin{document}
+    \maketitle
+    \tableofcontents
+    \section{Implementation}
+    \subsection{EDF and RMS algorithm}
+    I use a functor (\textit{SchedulingAlgorithm}) to represent the priority assignment of EDF and RMS. \newline \newline
+    RMS assigns priority by returning the task's period. \newline \newline 
+    EDF assigns priority by returning the difference between the task's next deadline and the current time. \newline 
+    This deadline is based off \textit{time + (time \% task -> period)} 
+    \subsection{Structures}
+    The two structures I use are the hashmap and the priority queue. \newline
+    \subsubsection{Hashmap}
+    The hashmap's key is the deadline and the elements are the list of tasks that have their deadline on that key. 
+    \newline
+    Using a hashmap offers O(1) access to all the tasks that need to be refreshed at a given time. 
+    \newline
+    The hashing function is a multiplicative hash using Knuth's constant.
+    \subsubsection{Priority Queue}
+    The priority queue is used to decide what task has the highest priority at any given time. \newline
+    It's heapify method is a quicksort of the arrayified min-heap structure. \newline
+    As such getting the minimum gives us O(nlogn): O(1) to find the root, and O(nlogn) to heapify the remaining tree. 
+    \subsection{Parsing}
+    Parsing was done to get information about the tasks being scheduled and to output misses, completions and executions of tasks.
+    \subsubsection{Input Parsing}
+    Input parsing reads the first line jumping 8 spaces, and then removing any whitespace, to get the task count. \newline
+    From there I call \textit{parseTaskLine} for the number of tasks given in the first line. \newline
+    parseTaskLine uses \textit{strtok} to get each word from the line. 
+    \subsubsection{Output Parsing}
+    Output parsing was writing to a file, either a miss message, an execution message, or a completion message. \newline
+    When closing the file I also printed "Scheduling Finished".
+    \subsection{Graphics}
+    \section{Scheduling Logic}
+    \subsection{Misses}
+    The first thing I check for is if any tasks have their deadline at the current time. \newline
+    These tasks are popped from the hashmap and then parsed one-by-one in a for loop. \newline
+    If the task's progress is the same as its execution time, then it was executed successfully, and I add it back to the priority queue it was removed from after completion. \newline
+    If the task' progress isn't equal to its execution time, then I parse a miss for it. \newline
+    A special consideration is made for the current task's execution, as it's progress won't be equal to the execution time, even if it executed, and it needs to be added back to the tpq, to get the next highest task. \newline
+    \subsection{NULL currTask}
+    If the currTask is NULL it's because it's deadline is during the current time, or the priority queue was empty as all the tasks had completed for the closest period. \newline
+    In this case I check if the priority queue is no longer empty, and if it isn't, I pop the highest priority task to be the currTask. \newline
+    Otherwise, I continue back to the top of the loop, incrementing the time, since a NULL currTask can't executed or be interrupted. 
+    \subsection{Execution}
+    If the currTask has executed then I parse an execution message, set its progeess to its execution time, and pop the highest priority task from the priority queue. \newline
+    I do not add the currTask back to the priority queue until its period has ended. 
+    \subsection{Interrupt}
+    Interrupts often mean saving the state of the currTask, but since the task doesn't do anything, all I need to do is save its progress. \newline
+    After I've saved its progress, I add the task back to the priority queue and get the highest priority task from the queue that interrupted the currTask's execution.
+    \section{Performance}
+    \subsection{Complexity}
+    \subsection{CPU Utilisation}
+    \subsection{Timing using bash's time}
+    \appendix{}
+\end{document}
