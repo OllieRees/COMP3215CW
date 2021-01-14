@@ -1,0 +1,8 @@
+-> Construct the scene based on the supertime period and list of tasks
+-> There are n values in the y-axis for each task
+-> There is t values in the x-axis for the supertime
+-> Read output file
+    -> for each line get the time, task and its command
+-> command execution: start of bar 
+-> command miss: red diamond at position (time, task) -> end of bar if it's the currTask
+-> command success: green triangle at position (time, task) -> end of bar 
