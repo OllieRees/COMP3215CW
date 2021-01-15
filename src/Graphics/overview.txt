@@ -1,8 +1,21 @@
--> Construct the scene based on the supertime period and list of tasks
--> There are n values in the y-axis for each task
--> There is t values in the x-axis for the supertime
--> Read output file
-    -> for each line get the time, task and its command
--> command execution: start of bar 
--> command miss: red diamond at position (time, task) -> end of bar if it's the currTask
--> command success: green triangle at position (time, task) -> end of bar 
+-> Render default window:
+    -> Left side should have a separator
+    -> Left side should have each task name evenly separated with the same x position and the y position increasing at constant intervals
+    -> Bottom side should have a separator
+    -> Each integer from 0 to supertime should have a label, evenly spaced at constant intervals on the x axes
+
+-> Initialise startT and currTaskID
+-> Read file line by line, splitting the line into three words.
+    -> The first word is the time
+    -> The second words is the task
+    -> The third word is the command
+    -> If the command is success:
+        -> blue squares from startT to time on currTaskID
+    -> If the command is miss:
+        -> Red diamond at startT on currTaskID
+        -> If task is currTaskID:
+            -> blue Squares from startT to time on currTaskID 
+    -> If the command is execute
+        -> Change startT to time and currTaskID to task's id (index in list of names)
+
+-> static rendering - no need for a main loop

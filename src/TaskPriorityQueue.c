@@ -68,7 +68,7 @@ int8_t insertTPQ(Task * task, TaskPriorityQueue * tpq, SchedulingAlgorithm prior
     if(searchElementTPQ(task -> name, tpq) != NULL)
         return -1;
 
-    printf("Insert %s into priority queue at %d\n", task -> name, time);
+    //printf("Insert %s into priority queue at %d\n", task -> name, time);
 
     //insert element to the end of the priority queue 
     uint8_t i = tpq -> taskCount;
@@ -97,7 +97,7 @@ int8_t removeTPQ(char * name,  TaskPriorityQueue * tpq, SchedulingAlgorithm prio
         tpq -> tasks[removedNodeIndex] = tpq -> tasks[tpq -> taskCount - 1];
     }
     
-    printf("Removed %s from priority queue at %d\n",  name, time);
+    //printf("Removed %s from priority queue at %d\n",  name, time);
 
     //reduce task count
     tpq -> taskCount--;
@@ -143,7 +143,7 @@ Task * getHighestPriorityTask(TaskPriorityQueue * tpq, SchedulingAlgorithm prior
     }
 
     Task * highestPTask = tpq -> tasks[0];
-    printf("Pop root : %s\n", highestPTask -> name); 
+    //printf("Pop root : %s\n", highestPTask -> name); 
     removeTPQ(highestPTask -> name, tpq, priorityAlg, time);
     return highestPTask;
 }

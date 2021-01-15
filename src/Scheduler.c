@@ -131,7 +131,7 @@ void runScheduler(int supertime, char * fileLoc, SchedulingAlgorithm * priorityF
         if(tc > 0 && tasks != NULL) {
             uint8_t j;
             for(j = 0; j < tc; j++) {
-                if(tasks[j] -> progress != tasks[j] -> exec_time) {
+                if(tasks[j] -> progress != tasks[j] -> exec_time && supertime > schedule -> waitingQueue -> elements[i].deadline - tasks[j] -> period) {
                     totalDeadlineMisses++;
                     parseMiss(tasks[j], supertime, outputFile);
                 }

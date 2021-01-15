@@ -73,7 +73,7 @@ int8_t pushWQ(Task * task, int deadline, WaitingQueue * wq) {
         if(key == wq -> queueSize + 1) //doesn't have an empty spot 
             return 0;
     } else {
-        printf("Checking task %s doesn't exist in the map\n", task -> name);
+        //printf("Checking task %s doesn't exist in the map\n", task -> name);
         //check if task already exists in wq[key]
         uint8_t i; 
         for(i = 0; i < wq -> elements[key].taskCount; i++) {
@@ -81,7 +81,7 @@ int8_t pushWQ(Task * task, int deadline, WaitingQueue * wq) {
                 return 0;
         }    
     }
-    printf("Push %s to %d\n", task -> name, key); 
+    //printf("Push %s to %d\n", task -> name, key); 
     
     //if empty assign a deadline and allocate memory for task
     if (wq -> elements[key].taskCount == 0) {
@@ -104,7 +104,7 @@ Task ** popAllWQ(int deadline, WaitingQueue * wq) {
     if(key == wq -> queueSize + 1) 
         return NULL;
 
-    printf("Pop tasks in wq at %d\n", key); 
+    //printf("Pop tasks in wq at %d\n", key); 
 
     //save task list
     Task ** tasks = wq -> elements[key].tasks;

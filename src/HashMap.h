@@ -4,8 +4,6 @@
  * Previously it was WaitingQueue.h
  */ 
 
-/* TODO: Use uthash */
-
 #ifndef TASK_H
 #define TASK_H
 #include "Task.h"

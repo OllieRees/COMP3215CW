@@ -1,11 +1,23 @@
 \documentclass{article}
 
+\usepackage{listings}
+
 \title{RMS and EDF Scheduler}
 \author{Ollie Rees (or1g18)}
 
 \begin{document}
     \maketitle
     \tableofcontents
+    \section{Use}
+    Running the executable, Scheduler, requires 4 arguments.
+    \newline
+    Argument 1: Input file location
+    \newline
+    Argument 2: Output file location
+    \newline
+    Argument 3: Supertime duration
+    \newline
+    Argument 4: Priority Algorithm (0 for RMS, 1 for EDF) 
     \section{Implementation}
     \subsection{EDF and RMS algorithm}
     I use a functor (\textit{SchedulingAlgorithm}) to represent the priority assignment of EDF and RMS. \newline \newline
@@ -34,6 +46,8 @@
     Output parsing was writing to a file, either a miss message, an execution message, or a completion message. \newline
     When closing the file I also printed "Scheduling Finished".
     \subsection{Graphics}
+    For the graphics, I aimed to use GLUT for the drawing and GLFW for the windows. Both of these are openGL extensions. \newline
+    However, it was difficult for me to get to grips with these very low-level drawing libraries, when I'm used to Java's and Python's object oriented graphical APIs. \newline
     \section{Scheduling Logic}
     \subsection{Misses}
     The first thing I check for is if any tasks have their deadline at the current time. \newline
@@ -52,8 +66,43 @@
     Interrupts often mean saving the state of the currTask, but since the task doesn't do anything, all I need to do is save its progress. \newline
     After I've saved its progress, I add the task back to the priority queue and get the highest priority task from the queue that interrupted the currTask's execution.
     \section{Performance}
-    \subsection{Complexity}
-    \subsection{CPU Utilisation}
     \subsection{Timing using bash's time}
-    \appendix{}
-\end{document}
+    I tested the perfomance of the scheduler, on testcase 3, using bash's time which gives the real, user and sys time. \newline
+    The sys time gives us the time it took to run on the system hardware, and so we'll look at that.
+    \newline \newline 
+    The sys. time. is often at 0.00 ms even at 1,000,000 time superduration.
+    \newline
+    There are anamolies, even at 100 ms, due to the computer relying on context switiching running the scheduler, but even these never peak above 0.005 ms. 
+    \newline
+    The full results are in the appendix under performance
+    \newline \newline 
+    The script I used is in the root folder. 
+    \section{Appendix}
+    \subsection{Task1}
+    \subsection{RMS}
+    \lstinputlisting{testcases/output1_RMS.txt}
+    \subsection{EDF}
+    \lstinputlisting{testcases/output1_EDF.txt}
+    
+    \subsection{Task2}
+    \subsection{RMS}
+    \lstinputlisting{testcases/output2_RMS.txt}
+    \subsection{EDF}
+    \lstinputlisting{testcases/output2_EDF.txt}
+
+    \subsection{Task3}
+    \subsection{RMS}
+    \lstinputlisting{testcases/output2_RMS.txt}
+    \subsection{EDF}
+    \lstinputlisting{testcases/output2_EDF.txt}
+   
+    \subsection{Task4}
+    \subsection{RMS}
+    \lstinputlisting{testcases/output2_RMS.txt}
+    \subsection{EDF}
+    \lstinputlisting{testcases/output2_EDF.txt}
+    
+    \subsection{Performance}
+    \lstinputlisting{performance.txt}
+    \end{document}
+
