@@ -16,7 +16,6 @@ Scheduler * createScheduler(Task ** tasks, uint8_t taskCount) {
 }
 
 static void taskExecuted(Task * currTask, unsigned int time, unsigned int * startTime, FILE * outputFile) {
-    printf("task being executed : %s\n", currTask -> name);
     parseExecution(currTask, time, outputFile);
     *startTime = time;
 }
@@ -30,22 +29,18 @@ static void runMiss(Task * currTask, unsigned int time, unsigned int startTime, 
     for(i = 0; i < taskCount; i++) {
         //special case for currTask if it's run into its deadline
         if(currTask == tasks[i]) {
-            printf("Curr Task popped from WQ at time %d and start time %d with progress %d\n", time, startTime, currTask -> progress);
             if(time - startTime + currTask -> progress == currTask -> exec_time) {
                 parseCompletion(currTask, time, outputFile);
             } else {
                 parseMiss(currTask, time, outputFile);
-                printf("%d %s miss\n", time, tasks[i] -> name);
             }
             insertTPQ(currTask, schedule -> taskPriorityQueue, priorityFunc, time);
             currTask = NULL;
         }
         //other tasks than currTask
         else {
-            printf("Progress: %d; EXEC: %d\n", tasks[i] -> progress, tasks[i] -> exec_time);
             if(tasks[i] -> progress != tasks[i] -> exec_time) {
                 parseMiss(tasks[i], time, outputFile);
-                printf("%d %s miss\n", time, tasks[i] -> name);
             } else {
                 insertTPQ(tasks[i], schedule -> taskPriorityQueue, priorityFunc, time);
             }
@@ -58,7 +53,6 @@ static void runMiss(Task * currTask, unsigned int time, unsigned int startTime, 
 }
 
 static void runInterrupt(Task ** currTask, unsigned int time, unsigned int * startTime, SchedulingAlgorithm * priorityFunc, FILE * outputFile, Scheduler * schedule) {
-        printf("%d %s interrupt\n", time, currTask[0] -> name);
         //save progress for currTask
         currTask[0] -> progress += time - *startTime;
         //pop highest p. task and push currTask on
@@ -70,15 +64,11 @@ static void runInterrupt(Task ** currTask, unsigned int time, unsigned int * sta
 }
 
 static void runCompletion(Task ** currTask, unsigned int time, unsigned int * startTime, SchedulingAlgorithm * priorityFunc, FILE * outputFile, Scheduler * schedule) {
-    printf("%d %s success\n", time, currTask[0] -> name);
     //parse success
     parseCompletion(*currTask, time, outputFile);
     //set progress of currTask to execTime
     currTask[0] -> progress = currTask[0] -> exec_time;
     //pop highest priority task from waiting queue and set to currTask
-    printf("\nTPQ\n");
-    printTPQ(schedule -> taskPriorityQueue);
-    printf("\n\n");
     *currTask = getHighestPriorityTask(schedule->taskPriorityQueue, priorityFunc, time);
     if(currTask[0] != NULL) {
         //parse execute
@@ -86,25 +76,19 @@ static void runCompletion(Task ** currTask, unsigned int time, unsigned int * st
     }
 }
 
-void runScheduler(int supertime, char * fileLoc, SchedulingAlgorithm * priorityFunc, Scheduler * schedule){
+void runScheduler(int supertime, char * fileLoc, SchedulingAlgorithm * priorityFunc, Scheduler * schedule) {
     //set up output file
     FILE * outputFile = createOutputFile(fileLoc);  
-    printWaitingQueue(schedule -> waitingQueue);
 
     //set up current task
     Task * currTask = getHighestPriorityTask(schedule -> taskPriorityQueue, priorityFunc, 0); 
-    
+    parseExecution(currTask, 0, outputFile);
+
     //time loop
     unsigned int startTime = 0; //used to save start time of current task
     unsigned int t;
-    for(t = 0; t < supertime; t++) {
-        //printf("%d", t);
-        //printf("\n\nWQ");
-        //printWaitingQueue(schedule -> waitingQueue);
-        //printf("\n\nTPQ\n\n");
-        //printTPQ(schedule -> taskPriorityQueue);
-        //printf("\n\n");
-        
+    for(t = 1; t <= supertime; t++) {
+       
         //Miss
         if(peekWQ(t, schedule -> waitingQueue) != NULL)
             runMiss(currTask, t, startTime, priorityFunc, outputFile, schedule);
@@ -134,8 +118,23 @@ void runScheduler(int supertime, char * fileLoc, SchedulingAlgorithm * priorityF
             }     
         }
     }
+
+    //run miss for all tasks with deadlines past t, except those that had executed already
+    uint8_t i;
+    for(i = 0; i < schedule -> waitingQueue -> queueSize; i++) {
+        uint8_t tc = schedule -> waitingQueue -> elements[i].taskCount;
+        Task ** tasks = schedule -> waitingQueue -> elements[i].tasks;
+        if(tc > 0 && tasks != NULL) {
+            uint8_t j;
+            for(j = 0; j < tc; j++) {
+                if(tasks[j] -> progress != tasks[j] -> exec_time)
+                    parseMiss(tasks[j], supertime, outputFile);
+            }
+        }
+    }
     closeOutputFile(outputFile);
 }   
+
 
 int8_t freeScheduler(Scheduler * schedule){
     //free tasks first
@@ -143,7 +142,7 @@ int8_t freeScheduler(Scheduler * schedule){
     for(i = 0; i < schedule -> taskCount; i++) 
         free(schedule -> tasks[i]);
     free(schedule -> tasks);
-
+    
     //free everything else
     destroyTaskPriorityQueue(schedule -> taskPriorityQueue);
     destroyWaitingQueue(schedule -> waitingQueue);
