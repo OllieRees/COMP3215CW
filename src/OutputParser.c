@@ -18,7 +18,8 @@ void parseCompletion(Task * task, int time, FILE * outputFile) {
    fprintf(outputFile, "%d %s Completes\n", time, task -> name); 
 }
 
-void closeOutputFile(FILE * file) {
+void closeOutputFile(unsigned int totalDeadlineMisses, FILE * file) {
+    fprintf(file, "%d\n", totalDeadlineMisses);
     fprintf(file, "Scheduling Finishes");
     fclose(file);
 }

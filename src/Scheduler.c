@@ -20,7 +20,7 @@ static void taskExecuted(Task * currTask, unsigned int time, unsigned int * star
     *startTime = time;
 }
 
-static void runMiss(Task * currTask, unsigned int time, unsigned int startTime, SchedulingAlgorithm priorityFunc, FILE * outputFile, Scheduler * schedule) {
+static void runMiss(Task * currTask, unsigned int time, unsigned int startTime, unsigned int * totalDeadlineMisses, SchedulingAlgorithm priorityFunc, FILE * outputFile, Scheduler * schedule) {
     //pop tasks that have their deadline now
     int taskCount = schedule -> waitingQueue -> elements[findKey(time, schedule -> waitingQueue)].taskCount;
     Task ** tasks = popAllWQ(time, schedule -> waitingQueue);
@@ -33,6 +33,7 @@ static void runMiss(Task * currTask, unsigned int time, unsigned int startTime, 
                 parseCompletion(currTask, time, outputFile);
             } else {
                 parseMiss(currTask, time, outputFile);
+                *totalDeadlineMisses = *totalDeadlineMisses + 1;
             }
             insertTPQ(currTask, schedule -> taskPriorityQueue, priorityFunc, time);
             currTask = NULL;
@@ -41,6 +42,7 @@ static void runMiss(Task * currTask, unsigned int time, unsigned int startTime, 
         else {
             if(tasks[i] -> progress != tasks[i] -> exec_time) {
                 parseMiss(tasks[i], time, outputFile);
+                *totalDeadlineMisses = *totalDeadlineMisses + 1;
             } else {
                 insertTPQ(tasks[i], schedule -> taskPriorityQueue, priorityFunc, time);
             }
@@ -83,6 +85,8 @@ void runScheduler(int supertime, char * fileLoc, SchedulingAlgorithm * priorityF
     //set up current task
     Task * currTask = getHighestPriorityTask(schedule -> taskPriorityQueue, priorityFunc, 0); 
     parseExecution(currTask, 0, outputFile);
+    
+    unsigned int totalDeadlineMisses = 0;
 
     //time loop
     unsigned int startTime = 0; //used to save start time of current task
@@ -91,7 +95,7 @@ void runScheduler(int supertime, char * fileLoc, SchedulingAlgorithm * priorityF
        
         //Miss
         if(peekWQ(t, schedule -> waitingQueue) != NULL)
-            runMiss(currTask, t, startTime, priorityFunc, outputFile, schedule);
+            runMiss(currTask, t, startTime, &totalDeadlineMisses, priorityFunc, outputFile, schedule);
 
         //tasks have ended -> check if any new tasks have been added to the p. queue else continue
         if(currTask == NULL) {
@@ -127,23 +131,18 @@ void runScheduler(int supertime, char * fileLoc, SchedulingAlgorithm * priorityF
         if(tc > 0 && tasks != NULL) {
             uint8_t j;
             for(j = 0; j < tc; j++) {
-                if(tasks[j] -> progress != tasks[j] -> exec_time)
+                if(tasks[j] -> progress != tasks[j] -> exec_time) {
+                    totalDeadlineMisses++;
                     parseMiss(tasks[j], supertime, outputFile);
+                }
             }
         }
     }
-    closeOutputFile(outputFile);
+    closeOutputFile(totalDeadlineMisses, outputFile);
 }   
 
 
 int8_t freeScheduler(Scheduler * schedule){
-    //free tasks first
-    uint8_t i;
-    for(i = 0; i < schedule -> taskCount; i++) 
-        free(schedule -> tasks[i]);
-    free(schedule -> tasks);
-    
-    //free everything else
     destroyTaskPriorityQueue(schedule -> taskPriorityQueue);
     destroyWaitingQueue(schedule -> waitingQueue);
     free(schedule);

@@ -39,6 +39,7 @@ void parseMiss(Task * task, int time, FILE * outputFile);
 void parseCompletion(Task * task, int time, FILE * outputFile);
 
 /* DESCR: Closes the output file with a message at the end of the file
+ * PARAM: totalDeadlineMisses is the total number of times a deadline was missed
  * PARAM: the file being closed
  */
-void closeOutputFile(FILE * file);
+void closeOutputFile(unsigned int totalDeadlineMisses, FILE * file);
