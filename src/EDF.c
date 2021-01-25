@@ -11,6 +11,6 @@
 uint8_t assignPriority_EDF(Task * task, int time) {
     
     //get next deadline 
-    int deadline = time + (time % task -> period);
+    int deadline = task -> period + (time - (time % task -> period));
     return deadline - time;
 }
